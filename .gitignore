@@ -1,0 +1,18 @@
+node_modules/
+.vercel/
+
+# --- secrets : ne doivent JAMAIS partir sur GitHub ---
+.env
+.env.local
+.env*.local
+*mot*de*passe*
+*motdepasse*
+*password*
+*secret*
+*.key
+*.pem
+credentials*
+
+*.log
+.DS_Store
+Thumbs.db
