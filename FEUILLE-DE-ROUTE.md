@@ -56,8 +56,17 @@ Objectif : un vrai client peut envoyer un projet, et tu le reçois.
 | **1.3** | **Resend : vérifier le domaine (DNS)** | **toi** | ⏳ 30 min + attente DNS |
 | **1.4** | **Cloudflare Turnstile : les deux clés** | **toi** | ⏳ 5 min |
 | **1.a** | **Renseigner `CONFIG` + vérifier que RLS bloque bien les anonymes** | ensemble | ⏳ |
-| 1.7 | Dépôt GitHub + import Vercel + variables d'environnement | toi | 20 min |
-| 1.8 | Test de bout en bout en ligne (`docs/07-mise-en-production.md`) | ensemble | — |
+| 1.7 | Dépôt GitHub + import Vercel + variables d'environnement | toi | ✅ https://socle-iota.vercel.app |
+| 1.8 | Test de bout en bout en ligne | ensemble | ✅ projet #1042 créé et vérifié |
+
+**Le site est en ligne et fonctionnel.** Un projet envoyé depuis le site atterrit en base ;
+un visiteur non connecté ne peut rien lire ; l'espace atelier exige une connexion.
+
+Restent deux réglages non bloquants :
+
+- [ ] `RESEND_API_KEY` — sans elle, aucun email n'est envoyé (le projet est quand même enregistré)
+- [ ] `TURNSTILE_SECRET_KEY` — sans elle, le formulaire est ouvert aux robots
+- [ ] Supprimer `api/diagnostic.js` une fois la mise en production stabilisée
 
 ## Étape 2 — Faire tester par de vraies personnes
 

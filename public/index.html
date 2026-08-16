@@ -863,6 +863,7 @@ textarea.bigfield:focus{border-color:var(--accent)}
 .recap-card div{font-size:14.5px;line-height:1.6}
 .consent{display:flex;gap:11px;align-items:flex-start;margin:9px 0;font-size:14px}
 .consent input{width:17px;height:17px;margin-top:2px;accent-color:var(--accent);flex:none}
+.ts-zone:not(:empty){margin-top:16px}
 .envoi-ko{margin-top:14px;border-left:3px solid #B4231E;background:rgba(180,35,30,.08);
   padding:12px 15px;border-radius:0 var(--r) var(--r) 0;font-size:14px;line-height:1.55}
 .qualif{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px}
@@ -2778,6 +2779,7 @@ function openRecap(){
     </div>
     <label class="consent"><input type="checkbox" id="c1"><span>Je confirme que ces informations correspondent à ce que je souhaite pour mon futur site.</span></label>
     <label class="consent"><input type="checkbox" id="c2"><span>J'accepte que mes informations soient utilisées pour l'étude de mon projet (aucune autre utilisation).</span></label>
+    <div id="turnstileZone" class="ts-zone"></div>
     <div class="actions" style="margin-top:22px">
       <button class="btn" id="sendBtn" disabled>Envoyer mon projet</button>
       <input type="text" id="piege" tabindex="-1" autocomplete="off" aria-hidden="true"
@@ -2786,6 +2788,7 @@ function openRecap(){
     </div>
     <div id="erreurEnvoi"></div>`;
   $('#recapOverlay').classList.add('on');
+  poserTurnstile();
   const chk = ()=>{ $('#sendBtn').disabled = !($('#c1').checked&&$('#c2').checked); };
   $('#c1').onchange=chk; $('#c2').onchange=chk;
   $('#recapClose').onclick = ()=>$('#recapOverlay').classList.remove('on');
@@ -2826,8 +2829,54 @@ function ecranVerrouille(){
   $('#lockWorks').onclick = ()=>{ S.filtre='Tous'; go('realisations'); };
   $('#lockHome').onclick = ()=>go('landing');
 }
+/* ================= ANTI-ROBOT (Cloudflare Turnstile) =================
+   Le composant produit un jeton que la fonction serveur vérifie. Sans clé
+   publique renseignée, tout ce bloc reste inerte : le parcours fonctionne
+   exactement comme avant. */
+let turnstilePret = null;
+function chargerTurnstile(){
+  if (turnstilePret) return turnstilePret;
+  turnstilePret = new Promise((resolve, reject) => {
+    if (window.turnstile) return resolve(window.turnstile);
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true; s.defer = true;
+    s.onload = () => window.turnstile ? resolve(window.turnstile) : reject(new Error('Turnstile indisponible'));
+    s.onerror = () => reject(new Error('Turnstile injoignable'));
+    document.head.appendChild(s);
+    setTimeout(() => reject(new Error('Turnstile n’a pas répondu')), 12000);
+  });
+  return turnstilePret;
+}
+// affiché dans le récapitulatif, au moment où le client s'apprête à envoyer
+async function poserTurnstile(){
+  const zone = $('#turnstileZone');
+  if (!zone || !CONFIG.turnstileSiteKey || !enLigne()) return;
+  try {
+    const ts = await chargerTurnstile();
+    window.__turnstileToken = '';
+    ts.render(zone, {
+      sitekey: CONFIG.turnstileSiteKey,
+      theme: 'auto',
+      language: 'fr',
+      callback: t => { window.__turnstileToken = t; },
+      // le jeton expire au bout de quelques minutes : on en redemande un
+      'expired-callback': () => { window.__turnstileToken = ''; ts.reset(zone); },
+      'error-callback': () => { window.__turnstileToken = ''; },
+    });
+  } catch (e) {
+    // Cloudflare injoignable : on le dit plutôt que de laisser un échec inexpliqué à l'envoi
+    zone.innerHTML = `<div class="envoi-ko">La vérification anti-robot n’a pas pu se charger
+      (${esc(e.message)}). Réessayez, ou désactivez votre bloqueur de publicité.</div>`;
+  }
+}
+
 /* Envoi réel vers la fonction serveur. Renvoie la référence attribuée. */
 async function envoyerProjet(){
+  // le serveur refusera sans jeton : autant l'expliquer ici, en clair
+  if (CONFIG.turnstileSiteKey && !window.__turnstileToken) {
+    throw new Error('vérification anti-robot pas encore terminée, patientez deux secondes');
+  }
   const corps = {
     etat: { packSlug:S.packSlug, metierLabel:S.metierLabel, specialization:S.specialization,
       name:S.name, goal:S.goal, diff:S.diff, theme:S.theme, palette:S.palette, fontPair:S.fontPair,
