@@ -45,14 +45,35 @@ input,textarea,select{font-family:var(--f-ui);color:var(--ink)}
 .saved.on{opacity:1}
 
 /* ============ écrans du tunnel ============ */
-.stage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:90px 22px 60px}
+/* `safe center` : centre verticalement tant que ça tient, mais bascule en alignement
+   haut dès que le contenu dépasse — sinon le titre sort de l'écran par le haut. */
+.stage{min-height:100vh;display:flex;align-items:safe center;justify-content:center;padding:104px 22px 72px}
+/* deux halos très doux : sans eux, un aplat de bleu-nuit sur 1900 px paraît vide et froid */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 640px at 18% -12%, rgba(224,163,74,.11), transparent 62%),
+    radial-gradient(900px 620px at 94% 4%, rgba(124,139,168,.09), transparent 60%),
+    radial-gradient(800px 500px at 50% 108%, rgba(224,163,74,.05), transparent 65%)}
+/* on ne touche PAS à `position` ici : la barre, les voiles et les cartes sont en `fixed`,
+   les repasser en `relative` casserait tout. Seule la profondeur est réglée. */
+#stage{position:relative;z-index:1}
 .screen{width:100%;max-width:660px;opacity:0;transform:translateY(14px);
   transition:opacity calc(.28s*var(--dur)) ease,transform calc(.28s*var(--dur)) cubic-bezier(.22,1,.36,1)}
 .screen.in{opacity:1;transform:none}
 .screen.out{opacity:0;transform:translateY(-14px)}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
-.q{font-family:var(--f-display);font-size:clamp(26px,4.6vw,40px);line-height:1.18;margin:0 0 10px;text-wrap:balance;font-weight:400}
-.hint{color:var(--muted);margin:0 0 30px;max-width:52ch}
+.q{font-family:var(--f-display);font-size:clamp(30px,4.8vw,46px);line-height:1.1;margin:0 0 14px;
+  text-wrap:balance;font-weight:400;letter-spacing:-.018em}
+.hint{color:var(--muted);margin:0 0 34px;max-width:50ch;font-size:16.5px}
+/* la question s'installe avant le champ : quelques dixièmes de seconde suffisent
+   à donner le sentiment d'un échange plutôt que d'un formulaire */
+.screen.in .eyebrow{animation:monte .5s cubic-bezier(.22,1,.36,1) both}
+.screen.in .q{animation:monte .5s .06s cubic-bezier(.22,1,.36,1) both}
+.screen.in .hint{animation:monte .5s .12s cubic-bezier(.22,1,.36,1) both}
+@keyframes monte{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .screen.in .eyebrow,.screen.in .q,.screen.in .hint{animation:none}
+}
 .bigfield{width:100%;font-size:clamp(19px,2.6vw,24px);padding:16px 4px;border:none;border-bottom:2px solid var(--line-strong);
   background:transparent;transition:border-color calc(.2s*var(--dur))}
 .bigfield:focus{border-color:var(--accent);outline:none}
@@ -63,8 +84,11 @@ textarea.bigfield:focus{border-color:var(--accent)}
   transition:transform calc(.15s*var(--dur)),background calc(.15s*var(--dur));display:inline-flex;align-items:center;gap:8px}
 .btn:hover{background:var(--accent-ink)}
 .btn:active{transform:scale(.98)}
-/* désactivé : sans couleur propre, le texte sombre du bouton devient invisible sur fond sombre */
-.btn[disabled]{background:var(--line);color:#9AA3B6;cursor:not-allowed;box-shadow:inset 0 0 0 1px var(--line-strong)}
+/* désactivé : un aplat gris ressemble à une dalle morte au milieu de l'écran.
+   Un contour discret dit « pas encore » sans peser visuellement. */
+.btn[disabled]{background:transparent;color:#7C879C;cursor:not-allowed;
+  box-shadow:inset 0 0 0 1.5px var(--line-strong)}
+.btn[disabled]:hover{background:transparent}
 .btn-ghost{background:transparent;border:none;color:var(--muted);font-size:15px;padding:14px 6px;text-decoration:underline;text-underline-offset:3px}
 .btn-ghost:hover{color:var(--ink)}
 .kb{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
@@ -180,7 +204,11 @@ textarea.bigfield:focus{border-color:var(--accent)}
 /* carte de visite (écran nom) */
 .bizcard{margin-top:38px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);
   padding:34px 30px;max-width:420px;transition:opacity calc(.3s*var(--dur))}
-.bizcard .bc-name{font-family:var(--f-display);font-size:26px;letter-spacing:.01em;min-height:34px}
+.bizcard .bc-name{font-family:var(--f-display);font-size:clamp(26px,3.4vw,34px);letter-spacing:.01em;
+  min-height:38px;transition:color .25s ease}
+/* tant qu'aucun nom n'est saisi, la carte doit s'effacer au lieu d'occuper un grand vide */
+.bizcard.vide{background:transparent;border-style:dashed;box-shadow:none}
+.bizcard.vide .bc-name{color:var(--muted)}
 .bizcard .bc-line{width:34px;height:2px;background:var(--accent);margin:12px 0}
 .bizcard .bc-sub{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
@@ -2310,7 +2338,7 @@ SCREENS.nom = () => swap(`
     <h1 class="q">Sous quel nom exercez-vous&nbsp;?</h1>
     <p class="hint">C'est lui qui apparaîtra en haut de votre site.</p>
     <input class="bigfield" id="nom" placeholder="Ex. Studio Léna, Chez Marco, Atelier Perrin…" autocomplete="off" autofocus>
-    <div class="bizcard" id="bizcard" style="opacity:.35">
+    <div class="bizcard vide" id="bizcard">
       <div class="bc-name" id="bcName">Votre nom</div><div class="bc-line"></div>
       <div class="bc-sub">${esc(S.metierLabel||pack().label)}${S.specialization&&!(S.metierLabel||'').toLowerCase().includes(S.specialization.toLowerCase())?' · '+esc(S.specialization):''}</div>
     </div>
@@ -2320,7 +2348,9 @@ SCREENS.nom = () => swap(`
   ()=>{
     const inp=$('#nom'), next=$('#next');
     inp.addEventListener('input', ()=>{ const v=inp.value.trim();
-      $('#bcName').textContent = v||'Votre nom'; $('#bizcard').style.opacity = v? '1':'.35'; next.disabled=!v; });
+      $('#bcName').textContent = v||'Votre nom';
+      $('#bizcard').classList.toggle('vide', !v);   // la carte prend corps dès qu'un nom est saisi
+      next.disabled=!v; });
     const goNext = ()=>{ S.name = inp.value.trim()||('Atelier '+(pack().label)); if(!S.site) buildSite(); go('univers'); };
     next.onclick = goNext;
     $('#noname').onclick = ()=>{ inp.value=''; S.name='Mon activité'; if(!S.site) buildSite(); go('univers'); };
