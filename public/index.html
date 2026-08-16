@@ -62,6 +62,77 @@ textarea.bigfield:focus{border-color:var(--accent)}
 /* landing */
 .landing{max-width:760px;text-align:left}
 .landing .q{font-size:clamp(34px,6vw,58px);margin-bottom:18px}
+
+/* ============ PAGE D'ACCUEIL ============
+   Elle doit démontrer plutôt que décrire : le produit se montre lui-même,
+   en construisant une vraie maquette sous les yeux du visiteur. */
+.accueil{max-width:1200px;text-align:left}
+.acc-hero{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);gap:clamp(28px,4.5vw,58px);
+  align-items:center;padding:8px 0 clamp(48px,7vw,84px)}
+.acc-hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(34px,4.2vw,52px);line-height:1.08;
+  letter-spacing:-.02em;margin:0 0 20px;text-wrap:balance}
+.acc-hero h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap}
+.acc-lead{color:var(--muted);font-size:clamp(16px,1.5vw,18.5px);line-height:1.6;margin:0 0 30px;max-width:44ch}
+.acc-hero .actions{margin-top:0}
+
+/* le cadre de démonstration */
+.acc-demo{min-width:0}
+.acc-frame{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;
+  box-shadow:0 2px 6px rgba(23,27,38,.05),0 24px 60px rgba(23,27,38,.13)}
+.acc-bar{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid var(--line);background:var(--paper)}
+.acc-bar i{width:9px;height:9px;border-radius:50%;background:var(--line-strong);flex:none}
+.acc-bar span{margin-left:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-vue{height:clamp(300px,34vw,430px);overflow:hidden;position:relative;background:var(--paper)}
+.acc-mini{position:absolute;inset:0;transition:opacity .5s ease}
+.acc-mini.sort{opacity:0}
+.acc-mini > div{width:1180px;transform-origin:0 0;position:absolute;top:0;left:0}
+/* les sections apparaissent l'une après l'autre : le geste central du produit */
+.acc-mini .s-sec{opacity:0;transform:translateY(22px)}
+.acc-mini .s-sec.vu{opacity:1;transform:none;transition:opacity .55s ease,transform .55s cubic-bezier(.22,1,.36,1)}
+.acc-mini .s-badge{display:none}
+.acc-legende{margin:14px 2px 0;font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:9px}
+.acc-legende b{color:var(--ink);font-weight:600}
+.acc-legende .pastille{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;animation:pulse 2.4s infinite}
+
+/* bandes de contenu */
+.acc-bande{padding:clamp(44px,6vw,76px) 0;border-top:1px solid var(--line)}
+.acc-titre{font-family:var(--f-display);font-weight:400;font-size:clamp(24px,3.2vw,36px);line-height:1.15;
+  margin:0 0 12px;letter-spacing:-.015em;text-wrap:balance}
+.acc-sous{color:var(--muted);font-size:16px;margin:0 0 34px;max-width:56ch}
+.acc-etapes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:clamp(16px,2.5vw,28px)}
+.acc-etape{position:relative;padding-top:20px;border-top:2px solid var(--ink)}
+.acc-etape .num{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--accent);display:block;margin-bottom:12px}
+.acc-etape b{display:block;font-size:17.5px;margin-bottom:7px;font-weight:600}
+.acc-etape p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.6}
+
+/* les sept univers, en échantillons */
+.acc-univers{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px}
+.acc-ech{border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.acc-ech:hover{transform:translateY(-4px)}
+.acc-ech .haut{padding:22px 16px 18px;position:relative}
+.acc-ech .haut b{display:block;font-size:19px;line-height:1.1;margin-bottom:9px}
+.acc-ech .haut span{display:block;height:5px;border-radius:3px;width:56%}
+.acc-ech .haut span+span{width:34%;margin-top:5px;opacity:.55}
+.acc-ech .bas{padding:9px 14px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;border-top:1px solid var(--line);color:var(--muted);background:var(--card)}
+
+/* appel final, sur fond nuit */
+.acc-final{margin-top:clamp(44px,6vw,76px);background:var(--night);color:var(--night-ink);border-radius:16px;
+  padding:clamp(34px,5vw,60px);display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center}
+.acc-final h2{font-family:var(--f-display);font-weight:400;font-size:clamp(24px,3.2vw,36px);margin:0 0 10px;letter-spacing:-.015em}
+.acc-final p{margin:0;color:rgba(232,234,246,.72);font-size:15.5px;max-width:52ch}
+.acc-final .btn{background:#fff;color:var(--night);font-size:16px;padding:15px 30px;white-space:nowrap}
+.acc-final .btn:hover{background:var(--night-ink)}
+.acc-pied{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:26px 2px 4px;
+  font-size:13px;color:var(--muted)}
+
+@media (max-width:900px){
+  .acc-hero{grid-template-columns:1fr;gap:32px}
+  .acc-demo{order:-1}
+  .acc-vue{height:clamp(240px,58vw,330px)}
+  .acc-final{grid-template-columns:1fr}
+}
 .chips{display:flex;gap:10px;margin:26px 0 0;flex-wrap:wrap}
 .chip{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted);border:1px solid var(--line);
   border-radius:99px;padding:6px 14px;background:var(--card)}
@@ -1996,20 +2067,157 @@ function go(screen){ S.screen = screen; SCREENS[screen](); planifierBrouillon();
 /* ================= ÉCRANS ================= */
 const SCREENS = {};
 
-SCREENS.landing = () => swap(`
-  <div class="screen landing">
-    <p class="eyebrow">Socle — votre site commence ici</p>
-    <h1 class="q">Voyez votre futur site en 90 secondes.</h1>
-    <p class="hint" style="font-size:18px;max-width:56ch">Décrivez votre activité, faites quelques choix, et découvrez une première maquette de votre site — construite sous vos yeux. Nous nous occupons ensuite de le réaliser.</p>
-    <div class="actions"><button class="btn" id="start" style="font-size:17px;padding:16px 32px">Créer la base de mon site</button>
-      <button class="btn-ghost" id="seeWorksLanding">Voir nos réalisations</button></div>
-    <div class="chips"><span class="chip">90 secondes</span><span class="chip">Gratuit</span><span class="chip">Sans compte</span><span class="chip">Maquette immédiate</span></div>
-    <div class="land-demo"><span class="dot"></span><p>À la fin de ce parcours, un professionnel reprend votre maquette et construit votre vrai site. Vous ne partez jamais d'une page blanche — nous non plus.</p></div>
+/* Les métiers montrés en démonstration. On garde de vrais contenus :
+   ce qui défile est exactement ce qu'un client obtiendrait. */
+const DEMOS = [
+  {pack:'photographe', spec:'Mariage', nom:'Studio Lumière', theme:'studio', palette:0, but:'showcase',
+   diff:'Des images sincères, jamais posées', metier:'Photographe de mariage'},
+  {pack:'restaurant', spec:'Italienne', nom:'Trattoria Bella', theme:'chaleureux', palette:0, but:'book',
+   diff:'Des pâtes fraîches faites chaque matin', metier:'Restaurant italien'},
+  {pack:'coiffure', spec:'En salon', nom:'Atelier Neuf', theme:'minimal', palette:0, but:'book',
+   diff:'Ici on prend le temps', metier:'Salon de coiffure'},
+  {pack:'artisan', spec:'Menuisier', nom:'Bois & Cie', theme:'moderne', palette:1, but:'contact',
+   diff:'Du sur-mesure en chêne massif, devis sous 24 h', metier:'Menuisier'},
+  {pack:'creatif', spec:'Graphisme', nom:'Studio Onze', theme:'audace', palette:0, but:'showcase',
+   diff:'Une esthétique forte et assumée', metier:'Studio de design'},
+];
+function modeleDemo(d){
+  const st = {packSlug:d.pack, metierLabel:d.metier, specialization:d.spec, name:d.nom, goal:d.but, diff:d.diff};
+  const adn = adnFor(st), h = empreinte(st);
+  const site = buildSiteFor(d.pack, d.spec, d.but, d.diff);
+  site.contact = {phone:'04 78 00 00 00', email:'', address:'Lyon', hours:'Sur rendez-vous'};
+  return {...st, theme:d.theme, palette:d.palette, fontPair:0, adn, empreinte:h,
+    layout:pickLayout(d.pack, 0, adn, h), site, comp:{apropos:100}, finished:true};
+}
+
+let demoTimer = null, demoIndex = 0;
+function arreterDemo(){ clearTimeout(demoTimer); demoTimer = null; }
+// la maquette est rendue en 1180 px de large puis réduite au cadre : à recalculer si la fenêtre change
+function ajusterDemo(){
+  const vue = $('#accMini'), inner = vue && vue.firstElementChild;
+  if (!inner) return;
+  inner.style.transform = `scale(${(vue.parentElement.getBoundingClientRect().width / 1180).toFixed(4)})`;
+}
+addEventListener('resize', ajusterDemo);
+// inutile de faire tourner la démonstration devant un onglet masqué
+addEventListener('visibilitychange', ()=>{
+  if (document.hidden) arreterDemo();
+  else if (S.screen === 'landing' && !demoTimer && $('#accMini')) jouerDemo();
+});
+
+function jouerDemo(){
+  const vue = $('#accMini'), barre = $('#accMetier'), nom = $('#accNom');
+  if (!vue) return arreterDemo();
+  const d = DEMOS[demoIndex % DEMOS.length];
+  const sobre = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  vue.classList.add('sort');
+  setTimeout(() => {
+    if (!document.body.contains(vue)) return arreterDemo();
+    vue.innerHTML = `<div>${renderSite({as: modeleDemo(d)})}</div>`;
+    // mise à l'échelle : la maquette est rendue en 1180 px puis réduite au cadre
+    const boite = vue.parentElement.getBoundingClientRect();
+    vue.firstElementChild.style.transform = `scale(${(boite.width / 1180).toFixed(4)})`;
+    barre.textContent = d.nom.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '.fr';
+    nom.textContent = d.metier;
+    vue.classList.remove('sort');
+
+    // les sections se posent l'une après l'autre — le geste central du produit
+    const secs = [...vue.querySelectorAll('.s-sec')];
+    secs.forEach((s, i) => setTimeout(() => s.classList.add('vu'), sobre ? 0 : 90 + i * 190));
+
+    demoIndex++;
+    demoTimer = setTimeout(jouerDemo, sobre ? 9000 : 5200);
+  }, sobre ? 0 : 420);
+}
+
+SCREENS.landing = () => { arreterDemo(); swap(`
+  <div class="screen accueil">
+
+    <section class="acc-hero">
+      <div class="acc-txt">
+        <p class="eyebrow">Socle — votre site commence ici</p>
+        <h1>Voyez votre site avant même de le commander.</h1>
+        <p class="acc-lead">Décrivez votre activité en quelques mots. Une maquette se construit
+          sous vos yeux, à votre image. Vous l'ajustez, vous l'envoyez — et nous en faisons votre vrai site.</p>
+        <div class="actions">
+          <button class="btn" id="start" style="font-size:17px;padding:16px 32px">Créer la base de mon site</button>
+          <button class="btn-ghost" id="seeWorksLanding">Voir nos réalisations</button>
+        </div>
+        <div class="chips"><span class="chip">90 secondes</span><span class="chip">Gratuit</span>
+          <span class="chip">Sans compte</span><span class="chip">Sans engagement</span></div>
+      </div>
+
+      <div class="acc-demo">
+        <div class="acc-frame">
+          <div class="acc-bar"><i></i><i></i><i></i><span id="accMetier">&nbsp;</span></div>
+          <div class="acc-vue"><div class="acc-mini" id="accMini"></div></div>
+        </div>
+        <p class="acc-legende"><span class="pastille"></span>
+          Maquette générée en direct — <b id="accNom">&nbsp;</b></p>
+      </div>
+    </section>
+
     <div id="repriseZone"></div>
+
+    <section class="acc-bande">
+      <h2 class="acc-titre">Trois minutes de votre temps, pas trois semaines.</h2>
+      <p class="acc-sous">Vous ne remplissez pas un formulaire : vous construisez, et vous voyez le résultat à chaque étape.</p>
+      <div class="acc-etapes">
+        <div class="acc-etape"><span class="num">01</span><b>Vous racontez</b>
+          <p>Votre métier, votre nom, ce qui vous rend différent. Les questions s'adaptent à votre activité —
+            un photographe et un plombier ne répondent pas aux mêmes.</p></div>
+        <div class="acc-etape"><span class="num">02</span><b>Votre site apparaît</b>
+          <p>Textes, structure, couleurs : tout est déduit de vos réponses. Deux clients d'un même métier
+            n'obtiennent jamais la même maquette.</p></div>
+        <div class="acc-etape"><span class="num">03</span><b>Nous prenons le relais</b>
+          <p>Vous envoyez votre maquette, nous construisons le vrai site : design finalisé, textes réécrits,
+            photos professionnelles, mise en ligne.</p></div>
+      </div>
+    </section>
+
+    <section class="acc-bande">
+      <h2 class="acc-titre">Sept univers, une seule identité : la vôtre.</h2>
+      <p class="acc-sous">Le style vient de vos mots, pas d'un catalogue. Écrivez « je bouscule les codes »
+        et votre site ne ressemblera pas à celui qui aura écrit « un travail précis, des délais tenus ».</p>
+      <div class="acc-univers">${THEMES.map(([id,label,sub])=>{
+        const c = PALETTES[id][0];
+        const sombre = THEMES_SOMBRES.includes(id);
+        const fond = {moderne:'#FFFFFF',elegant:'#16171C',chaleureux:'#FBF5ED',minimal:'#FFFFFF',
+          naturel:'#F7F5EF',audace:'#FFFFFF',studio:'#3D453A'}[id];
+        const encre = sombre ? '#EDEAE0' : '#141519';
+        const serif = ['elegant','naturel','studio'].includes(id);
+        return `<div class="acc-ech">
+          <div class="haut" style="background:${fond};color:${encre}">
+            <b style="font-family:${serif?'var(--f-display)':'var(--f-ui)'};font-weight:${serif?400:750}">${esc(label)}</b>
+            <span style="background:${c}"></span><span style="background:${encre}"></span>
+          </div>
+          <div class="bas">${esc(sub)}</div>
+        </div>`;}).join('')}</div>
+    </section>
+
+    <section class="acc-final">
+      <div>
+        <h2>Votre maquette vous attend.</h2>
+        <p>Aucun compte à créer, rien à payer, rien à installer. Si le résultat ne vous plaît pas,
+          vous fermez l'onglet — et vous nous aurez coûté 90 secondes.</p>
+      </div>
+      <button class="btn" id="startBas">Commencer</button>
+    </section>
+
+    <div class="acc-pied">
+      <span>© ${new Date().getFullYear()} Socle</span>
+      <span>Mentions légales · Confidentialité</span>
+    </div>
   </div>`,
-  ()=>{ $('#start').onclick = ()=>{ nouveauProjet(); go('metier'); };
-    $('#seeWorksLanding').onclick = ()=>{ S.filtre='Tous'; go('realisations'); };
-    afficherReprise(); });
+  ()=>{
+    const partir = ()=>{ arreterDemo(); nouveauProjet(); go('metier'); };
+    $('#start').onclick = partir;
+    $('#startBas').onclick = partir;
+    $('#seeWorksLanding').onclick = ()=>{ arreterDemo(); S.filtre='Tous'; go('realisations'); };
+    afficherReprise();
+    demoIndex = 0; jouerDemo();
+  }); };
 
 // Proposé, jamais imposé : on ne restaure rien sans que l'utilisateur le demande.
 function afficherReprise(){

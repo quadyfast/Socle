@@ -62,13 +62,21 @@ Objectif : un vrai client peut envoyer un projet, et tu le reçois.
 **Le site est en ligne et fonctionnel.** Un projet envoyé depuis le site atterrit en base ;
 un visiteur non connecté ne peut rien lire ; l'espace atelier exige une connexion.
 
-- [x] `TURNSTILE_SECRET_KEY` — anti-robot **actif et vérifié** : envoi réussi avec jeton validé par Cloudflare
-- [ ] `RESEND_API_KEY` — dernier réglage manquant. Sans elle, aucun email n'est envoyé
-      (le projet est quand même enregistré : l'échec d'email ne fait jamais perdre un projet)
-- [ ] Supprimer `api/diagnostic.js` une fois Resend en place
+- [x] `TURNSTILE_SECRET_KEY` — anti-robot actif et vérifié
+- [x] `RESEND_API_KEY` — email de notification reçu
+- [x] `api/diagnostic.js` supprimé (récupérable dans l'historique git si besoin)
+
+**ÉTAPE 1 TERMINÉE.** Chaîne complète vérifiée en production :
+formulaire → anti-robot Cloudflare → base Supabase → email Resend.
 
 > ⚠️ Ne pas faire tourner l'application complète dans le panneau d'aperçu de Claude :
 > la page est trop lourde et fait planter l'outil. Tester directement sur le site en ligne.
+>
+> ⚠️ Garder les clés et mots de passe **hors du dossier du projet**. GitHub a déjà bloqué
+> un push contenant une clé Resend laissée dans un `.txt` à la racine.
+
+**Limite connue** : sans domaine vérifié chez Resend, les emails ne partent que vers
+votre propre adresse. Les clients ne reçoivent pas encore leur accusé de réception.
 
 ## Étape 2 — Faire tester par de vraies personnes
 
