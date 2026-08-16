@@ -48,9 +48,16 @@ export default async function handler(req, res) {
     }
   }
 
-  rapport.verdict = !rapport.bonProjet ? 'MAUVAIS PROJET SUPABASE'
-    : rapport.base !== 'accessible' ? 'BASE INACCESSIBLE'
-    : !rapport.variables.SEL_IP ? 'SEL_IP MANQUANT'
+  const nbPresentes = Object.values(rapport.variables).filter(Boolean).length;
+  rapport.verdict =
+      nbPresentes === 0
+        ? 'AUCUNE VARIABLE VISIBLE — soit elles ne sont pas rattachées à ce projet, ' +
+          'soit elles ont été ajoutées après ce déploiement : redéployer'
+    : !rapport.variables.SUPABASE_URL   ? 'SUPABASE_URL absente'
+    : !rapport.bonProjet                ? 'MAUVAIS PROJET SUPABASE (attendu : ' + PROJET_ATTENDU + ')'
+    : !rapport.variables.SUPABASE_SERVICE_ROLE_KEY ? 'SUPABASE_SERVICE_ROLE_KEY absente'
+    : rapport.base !== 'accessible'     ? 'BASE INACCESSIBLE'
+    : !rapport.variables.SEL_IP         ? 'SEL_IP manquante'
     : 'CONFIGURATION CORRECTE';
 
   return reponse(res, 200, rapport);
