@@ -193,13 +193,31 @@ textarea.bigfield:focus{border-color:var(--accent)}
 .ac-item small{color:var(--muted);font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 
 /* cartes d'options (objectif, spécialisation) */
-.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:6px}
-.opt{border:1.5px solid var(--line);border-radius:var(--r);background:var(--card);padding:18px 16px;text-align:left;
-  font-size:15.5px;font-weight:600;color:var(--ink);transition:border-color calc(.15s*var(--dur)),transform calc(.15s*var(--dur)),box-shadow calc(.15s*var(--dur))}
-.opt small{display:block;font-weight:400;color:var(--muted);margin-top:5px;font-size:13.5px;line-height:1.4}
-.opt:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+/* ---- cartes de choix ----
+   Un choix doit annoncer ce qu'il produit, pas seulement se nommer.
+   D'où le pictogramme : il dit « voilà à quoi ressemblera votre page ». */
+.opts{display:grid;gap:12px;margin-top:6px;
+  grid-template-columns:repeat(auto-fit,minmax(212px,1fr))}
+.opts--simple{grid-template-columns:repeat(auto-fit,minmax(148px,1fr))}
+.opt{position:relative;overflow:hidden;border:1.5px solid var(--line);border-radius:10px;background:var(--card);
+  padding:20px 18px;text-align:left;font-size:16px;font-weight:600;color:var(--ink);
+  display:flex;flex-direction:column;align-items:flex-start;gap:11px;
+  transition:border-color .2s ease,transform .2s cubic-bezier(.22,1,.36,1),background-color .2s ease}
+/* le rail se remplit de haut en bas : le choix « se pose » */
+.opt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);
+  transform:scaleY(0);transform-origin:50% 0;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.opt:hover::before,.opt.sel::before{transform:scaleY(1)}
+.opt:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));transform:translateY(-3px)}
+.opt:active{transform:translateY(-1px)}
 .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
-.opt .glyph{font-family:var(--f-mono);color:var(--accent);font-size:13px;display:block;margin-bottom:8px}
+.opt.sel::after{content:'✓';position:absolute;top:14px;right:15px;color:var(--accent);font-size:15px;font-weight:700}
+.opt .lib{display:block;line-height:1.25}
+.opt small{display:block;font-weight:400;color:var(--muted);margin-top:-3px;font-size:13.5px;line-height:1.5}
+.opt .picto{color:var(--accent);display:block;opacity:.92}
+.opt .picto svg{display:block}
+/* variante compacte : pas de pictogramme, le libellé seul, centré */
+.opts--simple .opt{align-items:center;text-align:center;padding:17px 14px;font-size:15.5px;gap:6px}
+.opts--simple .opt.sel::after{top:8px;right:9px;font-size:12px}
 
 /* carte de visite (écran nom) */
 .bizcard{margin-top:38px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);
@@ -1727,6 +1745,27 @@ function layoutSummary(L){ return [LAY_LABEL[L.hero], LAY_LABEL[L.services], LAY
 // nombre de compositions réellement distinctes, affiché à l'utilisateur
 const NB_COMPOS = 5*4*3*3*2 * THEMES.length * 3 * 2;
 
+/* Pictogrammes des objectifs : chacun esquisse la page qui en découlera —
+   une galerie, un formulaire, un agenda, des tarifs, un plan, une carte. */
+const svg = d => `<span class="picto"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+  stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg></span>`;
+const PICTOS = {
+  // une grande image et deux vignettes : la galerie
+  showcase: svg('<rect x="2" y="4" width="13" height="18" rx="1.5"/><rect x="18" y="4" width="6" height="8" rx="1.5"/><rect x="18" y="14" width="6" height="8" rx="1.5"/>'),
+  // un formulaire et son bouton : la prise de contact
+  contact:  svg('<rect x="2.5" y="5" width="21" height="16" rx="2"/><path d="M6 10h9M6 14h6"/><rect x="15" y="13.5" width="5.5" height="4" rx="1" fill="currentColor" stroke="none"/>'),
+  // un agenda avec un créneau retenu : la réservation
+  book:     svg('<rect x="2.5" y="5" width="21" height="17" rx="2"/><path d="M2.5 10h21M8 3v4M18 3v4"/><rect x="7" y="13" width="5" height="4" rx="1" fill="currentColor" stroke="none"/>'),
+  // des étiquettes de prix : la vente
+  sell:     svg('<path d="M13.5 2.5H21a2.5 2.5 0 0 1 2.5 2.5v7.5L12 24 2 14 13.5 2.5Z"/><circle cx="18" cy="8" r="1.6" fill="currentColor" stroke="none"/>'),
+  // un point sur une carte : être trouvé
+  found:    svg('<path d="M13 23s8-7.1 8-13a8 8 0 1 0-16 0c0 5.9 8 13 8 13Z"/><circle cx="13" cy="10" r="2.8"/>'),
+  // une fiche d\'identité : la présentation
+  present:  svg('<rect x="2" y="5" width="22" height="16" rx="2"/><circle cx="9" cy="12" r="2.6"/><path d="M15 10.5h5M15 14h5M5.5 17.5c.9-1.6 5.2-1.6 6.1 0"/>'),
+  // une assiette dressée : donner envie
+  crave:    svg('<circle cx="13" cy="13" r="9.5"/><circle cx="13" cy="13" r="4.6"/><path d="M13 3.5v3"/>'),
+};
+
 /* ================= ÉTAT ================= */
 const S = {
   screen:'landing', packSlug:'generique', metierLabel:'', specialization:'',
@@ -2326,8 +2365,8 @@ SCREENS.spec = () => { const p = pack(); swap(`
     <p class="eyebrow">Parfait — nous savons ce qu'il faut à un ${esc(p.label.toLowerCase())}</p>
     <h1 class="q">${esc(p.specQ)}</h1>
     <p class="hint">Cela nous permet d'adapter les pages, les textes et les visuels de votre site.</p>
-    <div class="opts">${p.specOpts.map(o=>`<button class="opt" data-v="${esc(o)}"><span class="glyph">◆</span>${esc(o)}</button>`).join('')}
-      <button class="opt" data-v=""><span class="glyph">…</span>Autre<small>Nous adapterons ensuite</small></button></div>
+    <div class="opts opts--simple">${p.specOpts.map(o=>`<button class="opt" data-v="${esc(o)}"><span class="lib">${esc(o)}</span></button>`).join('')}
+      <button class="opt" data-v=""><span class="lib">Autre</span><small>Nous adapterons</small></button></div>
   </div>`,
   ()=>{ document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ b.classList.add('sel');
       S.specialization = b.dataset.v; buildSite(); setTimeout(()=>go('nom'),240); }); }); };
@@ -2395,7 +2434,9 @@ SCREENS.objectif = () => { const p = pack(); swap(`
     <p class="eyebrow">Excellent choix — ${esc(p.feedback)}</p>
     <h1 class="q">Que doit accomplir votre site&nbsp;?</h1>
     <p class="hint">Votre page d'accueil sera construite autour de cet objectif.</p>
-    <div class="opts">${p.goals.map(g=>`<button class="opt" data-g="${g.id}"><span class="glyph">→</span>${esc(g.label)}<small>${esc(g.sub)}</small></button>`).join('')}</div>
+    <div class="opts">${p.goals.map(g=>`<button class="opt" data-g="${g.id}">
+      ${PICTOS[g.id] || PICTOS.present}
+      <span class="lib">${esc(g.label)}</span><small>${esc(g.sub)}</small></button>`).join('')}</div>
   </div>`,
   ()=>{ document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ b.classList.add('sel');
       S.goal = b.dataset.g; S.site.cta = pack().goals.find(g=>g.id===S.goal).cta;
