@@ -1629,6 +1629,23 @@ const S = {
   comp:{identite:100,univers:0,services:20,photos:0,apropos:35,contact:0,reseaux:0,pages:40},
   visited:{}, maxPct:8, aiUses:0,
 };
+/* Remet le parcours à zéro. Sans ça, un visiteur qui enchaîne un second projet
+   sans recharger la page garde `submitted` à vrai : il est renvoyé à l'écran
+   verrouillé dès l'entrée du studio, sans jamais voir sa maquette. */
+function nouveauProjet(){
+  Object.assign(S, {
+    packSlug:'generique', metierLabel:'', specialization:'', name:'',
+    theme:'moderne', palette:0, fontPair:0, goal:null, diff:'',
+    layout:null, laySeed:0, adn:null, empreinte:0,
+    atelierPas:0, atelierFait:false, refProjet:'',
+    device:'desktop', email:'', submitted:false, site:null,
+    comp:{identite:100,univers:0,services:20,photos:0,apropos:35,contact:0,reseaux:0,pages:40},
+    visited:{}, maxPct:8, aiUses:0,
+    themeTouche:false, photosPassees:false,
+    qBudget:'', qEcheance:'',
+  });
+  window.__turnstileToken = '';
+}
 const pack = () => PACKS[S.packSlug];
 // seuil unique : au-dessous, le panneau devient un tiroir (doit rester aligné sur la media query CSS)
 function isNarrow(){ return matchMedia('(max-width:920px)').matches; }
@@ -1990,7 +2007,7 @@ SCREENS.landing = () => swap(`
     <div class="land-demo"><span class="dot"></span><p>À la fin de ce parcours, un professionnel reprend votre maquette et construit votre vrai site. Vous ne partez jamais d'une page blanche — nous non plus.</p></div>
     <div id="repriseZone"></div>
   </div>`,
-  ()=>{ $('#start').onclick = ()=>go('metier');
+  ()=>{ $('#start').onclick = ()=>{ nouveauProjet(); go('metier'); };
     $('#seeWorksLanding').onclick = ()=>{ S.filtre='Tous'; go('realisations'); };
     afficherReprise(); });
 
@@ -2192,7 +2209,7 @@ SCREENS.realisations = () => {
       const b = e.target.closest('.work'); if(!b) return;
       openWork(b.dataset.id);
     });
-    const back = ()=> S.submitted ? ecranVerrouille() : go('metier');
+    const back = ()=> S.submitted ? ecranVerrouille() : (nouveauProjet(), go('metier'));
     $('#wStart').onclick = back; $('#wStart2').onclick = back;
     $('#wHome').onclick = ()=>go('landing');
   });

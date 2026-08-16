@@ -62,11 +62,13 @@ Objectif : un vrai client peut envoyer un projet, et tu le reçois.
 **Le site est en ligne et fonctionnel.** Un projet envoyé depuis le site atterrit en base ;
 un visiteur non connecté ne peut rien lire ; l'espace atelier exige une connexion.
 
-Restent deux réglages non bloquants :
+- [x] `TURNSTILE_SECRET_KEY` — anti-robot **actif et vérifié** : envoi réussi avec jeton validé par Cloudflare
+- [ ] `RESEND_API_KEY` — dernier réglage manquant. Sans elle, aucun email n'est envoyé
+      (le projet est quand même enregistré : l'échec d'email ne fait jamais perdre un projet)
+- [ ] Supprimer `api/diagnostic.js` une fois Resend en place
 
-- [ ] `RESEND_API_KEY` — sans elle, aucun email n'est envoyé (le projet est quand même enregistré)
-- [ ] `TURNSTILE_SECRET_KEY` — sans elle, le formulaire est ouvert aux robots
-- [ ] Supprimer `api/diagnostic.js` une fois la mise en production stabilisée
+> ⚠️ Ne pas faire tourner l'application complète dans le panneau d'aperçu de Claude :
+> la page est trop lourde et fait planter l'outil. Tester directement sur le site en ligne.
 
 ## Étape 2 — Faire tester par de vraies personnes
 

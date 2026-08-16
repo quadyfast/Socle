@@ -1,17 +1,31 @@
 node_modules/
 .vercel/
 
-# --- secrets : ne doivent JAMAIS partir sur GitHub ---
+# =====================================================================
+# SECRETS — ne doivent JAMAIS partir sur GitHub
+# Règle de survie : tout fichier .txt à la racine est ignoré, car c'est là
+# qu'on colle ses clés « en attendant ». Mieux vaut ignorer trop que trop peu.
+# =====================================================================
+/*.txt
 .env
 .env.local
 .env*.local
+
+# noms fréquents, quelle que soit l'orthographe
 *mot*de*passe*
 *motdepasse*
 *password*
 *secret*
+*[Cc]le*api*
+*[Cc]lé*api*
+*api*key*
+*apikey*
+*token*
+*credential*
 *.key
 *.pem
-credentials*
+*.p12
+*.pfx
 
 *.log
 .DS_Store
